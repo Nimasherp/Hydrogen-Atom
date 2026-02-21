@@ -6,7 +6,6 @@ from scipy.constants import physical_constants
 import math
 
 a0 = physical_constants["Bohr radius"][0]
-a0 = 1
 
 
 def spherical_harmonicY(theta, phi, l, m):
@@ -41,6 +40,7 @@ class HydrogenOrbital:
         self.n = n
         self.l = l
         self.m = m
+        self.nb_of_pos = 100
 
     def psi(self, r, theta, phi):
         return (
@@ -52,9 +52,32 @@ class HydrogenOrbital:
     def probability_density(self,  r, theta, phi):
         return np.abs(self.psi(r, theta, phi))**2
 
-hydrogen =  HydrogenOrbital(1, 0, 0)
-print(hydrogen.psi(1 , 58, 64))
 
+steps = 100
+
+r = np.linspace(0, 20*a0, steps)
+theta = np.linspace(0, np.pi, steps)
+phi = np.linspace(0, 2*np.pi, steps)
+
+# Distance between two steps
+dr = r[1] - r[0]
+dtheta = theta[1] - theta[0]
+dphi = phi[1] - phi[0] 
+
+R, T, P = np.meshgrid(r, theta, phi, indexing="ij")
+
+hydrogen = HydrogenOrbital(1,0,0)
+
+psi2 = hydrogen.probability_density(R, T, P)
+
+# The wavefunction is normalized, 
+# so the total probability (integral over all space, here we use a sum) should be one.
+
+integral = np.sum(
+    psi2 * R**2 * np.sin(T)
+) * dr * dtheta * dphi
+
+print(integral)
 # space = plt.axes(projection="3d")
 # proton = np.array([0, 0 ,0])
 # space.scatter(proton[0], proton[1], proton[2], color="red", s=100)
