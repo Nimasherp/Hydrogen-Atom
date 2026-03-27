@@ -4,7 +4,7 @@
 
 <p align ="center">
   <img src="orbital_3D_(3,0,0).png" width="400">
-<\p>
+</p>
 
 <hr>
 
